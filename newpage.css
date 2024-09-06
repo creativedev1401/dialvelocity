@@ -1,0 +1,172 @@
+/* Basic reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Montserrat', sans-serif;
+    background-color: #F9F9F9;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.navbar {
+    background-color: #FFFFFF;
+    border-bottom: 1px solid #EDEDED;
+    padding: 10px 0;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    position: fixed;
+    width: 100%;
+    top: 0;
+    z-index: 1000;
+}
+
+.navbar-logo {
+    display: flex;
+    align-items: center;
+    gap: 8px; /* Reduced the space between the logo and the text */
+}
+
+.navbar-logo .logo img {
+    height: 29px; /* Increased the height of the logo */
+    display: block;
+}
+
+.navbar-logo div {
+    font-size: 20px; /* Font size for "linkup" text */
+    font-weight: 600;
+    color: #333333;
+}
+
+.navbar-menu ul {
+    list-style: none;
+    display: flex;
+    gap: 25px;
+}
+
+.navbar-menu ul li a {
+    text-decoration: none;
+    font-weight: 500;
+    color: #333333;
+    font-size: 15px;
+    transition: color 0.3s ease;
+}
+
+.navbar-menu ul li a:hover {
+    color: #00A82D;
+}
+
+.navbar-cta {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.navbar-cta .login-btn {
+    font-weight: 500;
+    font-size: 15px;
+    color: #333333;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.navbar-cta .login-btn:hover {
+    color: #00A82D;
+}
+
+.navbar-cta .cta-btn {
+    padding: 8px 20px;
+    background-color: #00A82D;
+    color: #FFFFFF;
+    font-weight: 600;
+    font-size: 15px;
+    text-decoration: none;
+    border-radius: 20px;
+    transition: background-color 0.3s ease;
+}
+
+.navbar-cta .cta-btn:hover {
+    background-color: #008C23;
+}
+
+.form-container {
+    max-width: 400px;
+    margin: 100px auto;
+    padding: 20px;
+    background: #FFFFFF;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.form-container h1 {
+    margin-bottom: 20px;
+    font-size: 24px;
+}
+
+.form-container label {
+    display: block;
+    margin: 10px 0 5px;
+}
+
+.form-container input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #EDEDED;
+    border-radius: 4px;
+}
+
+.form-container button {
+    width: 100%;
+    padding: 10px;
+    background-color: #00A82D;
+    color: #FFFFFF;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.form-container button:hover {
+    background-color: #008C23;
+}
+
+.navbar-cta .sign-out-btn {
+    font-weight: 500;
+    font-size: 15px;
+    color: #333333;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.navbar-cta .sign-out-btn:hover {
+    color: #00A82D;
+}
+
+.navbar-cta .circle-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background-color: #00A82D;
+    color: #FFFFFF;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 20px;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+}
+
+.navbar-cta .circle-btn:hover {
+    background-color: #008C23;
+}

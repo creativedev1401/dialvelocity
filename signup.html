@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="newpage.css">
+</head>
+<body>
+    <header class="navbar">
+        <div class="container">
+            <div class="navbar-logo">
+                <a href="newpage.html" class="logo">
+                    <img src="modified_logo_with_white_background.png" alt="Grammarly Logo">
+                </a>
+                <div><a href="newpage.html" style="text-decoration: none; color: inherit;">dialvelocity</a></div>
+            </div>
+            <nav class="navbar-menu">
+                <ul>
+                    <li><a href="newpage.html">Home</a></li>
+                    <li><a href="#">About</a></li>
+                    <li><a href="#">Support</a></li>
+                </ul>
+            </nav>
+            <div class="navbar-cta">
+                <a href="login.html" class="cta-btn">Log in</a>
+                <a href="#" class="cta-btn" id="sign-out-btn">Sign out</a>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="form-container">
+            <h1>Sign Up</h1>
+            <form id="signup-form" autocomplete="off">
+                <input type="text" name="fakeusernameremembered" style="display:none">
+                <input type="password" name="fakepasswordremembered" style="display:none">
+            
+                <!-- <label for="email">Email:</label>
+                <input type="email" id="email" name="signup-email" required autocomplete="new-email"> -->
+            
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="signup-username" required autocomplete="new-username">
+
+                <label for="password">Pick a password:</label>
+                <input type="password" id="password" name="signup-password" required autocomplete="new-password">
+            
+                <label for="confirm-password">Confirm password:</label>
+                <input type="password" id="confirm-password" name="signup-confirm-password" required autocomplete="new-password">
+                
+                <button type="submit">Sign Up</button>
+            </form>   
+        </div>
+    </main>
+    <script src="script.js"></script>
+</body>
+</html>

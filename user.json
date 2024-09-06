@@ -1,0 +1,381 @@
+{
+  "MyMenu": {
+    "Number": "888-888-8888",
+    "Link": "1A3F4C6B9D2E",
+    "options": {
+      "main": {
+        "menuId": "main",
+        "options": [
+          {
+            "label": "Maintenance",
+            "action": "submenu",
+            "target": "maintenanceMenu"
+          },
+          {
+            "label": "Support",
+            "action": "submenu",
+            "target": "supportMenu"
+          },
+          {
+            "label": "Dial",
+            "action": "dial",
+            "phoneNumber": "(333) 333-333",
+            "extension": "4444"
+          },
+          {
+            "label": "neweDialers",
+            "action": "submenu",
+            "target": "newDialerMenu"
+          }
+        ]
+      },
+      "maintenanceMenu": {
+        "menuId": "maintenanceMenu",
+        "options": [
+          {
+            "label": "Electrical Maintenance",
+            "action": "dial",
+            "phoneNumber": "(111)-222-333",
+            "extension": "1001"
+          },
+          {
+            "label": "Plumbing",
+            "action": "dial",
+            "phoneNumber": "(111)-222-333",
+            "extension": "1002"
+          }
+        ]
+      },
+      "supportMenu": {
+        "menuId": "supportMenu",
+        "options": [
+          {
+            "label": "Technical Support",
+            "action": "dial",
+            "phoneNumber": "(222)-333-444",
+            "extension": "2001"
+          },
+          {
+            "label": "Customer Service",
+            "action": "dial",
+            "phoneNumber": "(222)-333-444",
+            "extension": "2002"
+          }
+        ]
+      }
+    }
+  },
+  "SecondaryMenu": {
+    "Number": "777-777-7777",
+    "Link": "B2C3D4E5F6A7",
+    "options": {
+      "main": {
+        "menuId": "secondary",
+        "options": [
+          {
+            "label": "Billing",
+            "action": "submenu",
+            "target": "billingMenu"
+          },
+          {
+            "label": "Sales",
+            "action": "submenu",
+            "target": "salesMenu"
+          },
+          {
+            "label": "Emergency",
+            "action": "dial",
+            "phoneNumber": "(555)-555-555",
+            "extension": "9999"
+          }
+        ]
+      },
+      "billingMenu": {
+        "menuId": "billingMenu",
+        "options": [
+          {
+            "label": "Account Inquiries",
+            "action": "dial",
+            "phoneNumber": "(888)-999-000",
+            "extension": "1010"
+          },
+          {
+            "label": "Payment Processing",
+            "action": "dial",
+            "phoneNumber": "(888)-999-000",
+            "extension": "1020"
+          }
+        ]
+      },
+      "salesMenu": {
+        "menuId": "salesMenu",
+        "options": [
+          {
+            "label": "New Sales",
+            "action": "dial",
+            "phoneNumber": "(777)-888-999",
+            "extension": "2010"
+          },
+          {
+            "label": "Existing Sales",
+            "action": "dial",
+            "phoneNumber": "(777)-888-999",
+            "extension": "2020"
+          }
+        ]
+      }
+    }
+  },
+  "AdminMenu": {
+    "Number": "999-999-9999",
+    "Link": "ABCDEF123456",
+    "options": {
+      "main": {
+        "menuId": "admin",
+        "options": [
+          {
+            "label": "User Management",
+            "action": "submenu",
+            "target": "userManagementMenu"
+          },
+          {
+            "label": "System Logs",
+            "action": "submenu",
+            "target": "systemLogsMenu"
+          },
+          {
+            "label": "Admin Support",
+            "action": "dial",
+            "phoneNumber": "(444)-444-444",
+            "extension": "1111"
+          }
+        ]
+      },
+      "userManagementMenu": {
+        "menuId": "userManagementMenu",
+        "options": [
+          {
+            "label": "Add User",
+            "action": "dial",
+            "phoneNumber": "(333)-444-555",
+            "extension": "3010"
+          },
+          {
+            "label": "Remove User",
+            "action": "dial",
+            "phoneNumber": "(333)-444-555",
+            "extension": "3020"
+          }
+        ]
+      },
+      "systemLogsMenu": {
+        "menuId": "systemLogsMenu",
+        "options": [
+          {
+            "label": "View Logs",
+            "action": "dial",
+            "phoneNumber": "(222)-333-444",
+            "extension": "4010"
+          },
+          {
+            "label": "Export Logs",
+            "action": "dial",
+            "phoneNumber": "(222)-333-444",
+            "extension": "4020"
+          }
+        ]
+      }
+    }
+  },
+  "MarketingMenu": {
+    "Number": "666-666-6666",
+    "Link": "123456ABCDEF",
+    "options": {
+      "main": {
+        "menuId": "marketing",
+        "options": [
+          {
+            "label": "Campaigns",
+            "action": "submenu",
+            "target": "campaignsMenu"
+          },
+          {
+            "label": "Leads",
+            "action": "submenu",
+            "target": "leadsMenu"
+          },
+          {
+            "label": "Marketing Support",
+            "action": "dial",
+            "phoneNumber": "(555)-555-555",
+            "extension": "2222"
+          }
+        ]
+      },
+      "campaignsMenu": {
+        "menuId": "campaignsMenu",
+        "options": [
+          {
+            "label": "Create Campaign",
+            "action": "dial",
+            "phoneNumber": "(777)-888-999",
+            "extension": "5010"
+          },
+          {
+            "label": "Review Campaigns",
+            "action": "dial",
+            "phoneNumber": "(777)-888-999",
+            "extension": "5020"
+          }
+        ]
+      },
+      "leadsMenu": {
+        "menuId": "leadsMenu",
+        "options": [
+          {
+            "label": "New Leads",
+            "action": "dial",
+            "phoneNumber": "(888)-999-000",
+            "extension": "6010"
+          },
+          {
+            "label": "Manage Leads",
+            "action": "dial",
+            "phoneNumber": "(888)-999-000",
+            "extension": "6020"
+          }
+        ]
+      }
+    }
+  },
+  "HRMenus": {
+    "Number": "555-555-5555",
+    "Link": "FEDCBA654321",
+    "options": {
+      "main": {
+        "menuId": "hr",
+        "options": [
+          {
+            "label": "Employee Directory",
+            "action": "submenu",
+            "target": "employeeDirectoryMenu"
+          },
+          {
+            "label": "Payroll",
+            "action": "submenu",
+            "target": "payrollMenu"
+          },
+          {
+            "label": "HR Support",
+            "action": "dial",
+            "phoneNumber": "(666)-666-666",
+            "extension": "3333"
+          }
+        ]
+      },
+      "employeeDirectoryMenu": {
+        "menuId": "employeeDirectoryMenu",
+        "options": [
+          {
+            "label": "Search Employee",
+            "action": "dial",
+            "phoneNumber": "(111)-222-333",
+            "extension": "7010"
+          },
+          {
+            "label": "Add Employee",
+            "action": "dial",
+            "phoneNumber": "(111)-222-333",
+            "extension": "7020"
+          }
+        ]
+      },
+      "payrollMenu": {
+        "menuId": "payrollMenu",
+        "options": [
+          {
+            "label": "View Payroll",
+            "action": "dial",
+            "phoneNumber": "(444)-555-666",
+            "extension": "8010"
+          },
+          {
+            "label": "Edit Payroll",
+            "action": "dial",
+            "phoneNumber": "(444)-555-666",
+            "extension": "8020"
+          }
+        ]
+      }
+    }
+  },
+  "d2b2f3e8915": {
+    "Number": "000-000-0000",
+    "Link": "d2b2f3e8915",
+    "options": {
+      "main": {
+        "menuId": "main",
+        "options": [
+          {
+            "label": "example option",
+            "action": "dial",
+            "phoneNumber": "(333) 333-333",
+            "extension": "4444"
+          },
+          {
+            "label": "example option 2",
+            "action": "dial",
+            "phoneNumber": "(333) 333-333",
+            "extension": "4444"
+          }
+        ]
+      }
+    }
+  },
+  "1e5261ef36b": {
+    "Number": "000-000-0000",
+    "Link": "1e5261ef36b",
+    "options": {
+      "main": {
+        "menuId": "main",
+        "options": [
+          {
+            "label": "example option",
+            "action": "dial",
+            "phoneNumber": "(333) 333-333",
+            "extension": "4444"
+          },
+          {
+            "label": "example option 2",
+            "action": "dial",
+            "phoneNumber": "(333) 333-333",
+            "extension": "4444"
+          }
+        ]
+      }
+    }
+  },
+  "37f8bb157c1": {
+    "Number": "000-000-0000",
+    "Link": "37f8bb157c1",
+    "options": {
+      "main": {
+        "menuId": "main",
+        "options": [
+          {
+            "label": "example option",
+            "action": "dial",
+            "phoneNumber": "(333) 333-333",
+            "extension": "4444"
+          },
+          {
+            "label": "example option 2",
+            "action": "dial",
+            "phoneNumber": "(333) 333-333",
+            "extension": "4444"
+          }
+        ]
+      }
+    }
+  }
+}

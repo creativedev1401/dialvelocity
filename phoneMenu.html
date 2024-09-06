@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Phone Menu</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .dial-button {
+            position: relative;
+            margin: 10px 0;
+            padding: 10px;
+            background-color: #ecefff;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+            padding-left: 30px; /* Space for the remove icon */
+        }
+        .dial-button:hover {
+            background-color: #d0e0ff;
+        }
+        .backBtn {
+            margin-top: 20px;
+        }
+        .edit-icon, .remove-icon {
+            position: absolute;
+            width: 21px;
+            height: 21px;
+            cursor: pointer;
+        }
+        .remove-icon {
+            top: 0; /* Align the icon to the top of the button */
+            left: 0; /* Align the icon to the left of the button */
+            transform: translate(-50%, -50%); /* Center the icon at the top left corner */
+        }
+
+        .edit-icon {
+            top: 0; /* Align the icon to the top of the button */
+            right: 0; /* Align the icon to the right of the button */
+            transform: translate(50%, -50%); /* Center the icon at the top right corner */
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.4);
+        }
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 500px;
+            border-radius: 10px;
+        }
+        .action-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+        .cancel-btn, .save-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .cancel-btn {
+            background-color: #f44336;
+            color: white;
+        }
+        .save-btn {
+            background-color: #4CAF50;
+            color: white;
+        }
+        .radio-group {
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="menu-container">
+        <!-- The header with the name, number, and link has been removed as per your request -->
+        <div id="menu" class="menu-options"></div>
+        <button id="back-button" class="backBtn" style="display: none;" onclick="goBack()">⬅️</button>
+        <div class="option-controls" id="option-controls">
+            <button onclick="openAddModal()">Add Option</button>
+        </div>
+    </div>
+
+    <!-- Modal Structure for Edit and Add -->
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <h3 id="modalTitle">Edit Option</h3>
+            <label for="label">Label:</label>
+            <input type="text" id="editLabel">
+
+            <div class="radio-group">
+                <label>
+                    <input type="radio" name="actionType" id="dialAction" value="dial"> Dial
+                </label>
+                <label>
+                    <input type="radio" name="actionType" id="submenuAction" value="submenu"> Submenu
+                </label>
+            </div>
+
+            <label for="phoneNumber">Phone Number:</label>
+            <input type="text" id="editPhoneNumber" disabled maxlength="14" oninput="formatPhoneNumber(this)">
+
+            <label for="extension">Extension:</label>
+            <input type="text" id="editExtension" disabled maxlength="4">
+
+            <label for="targetSubmenu">Submenu Name:</label>
+            <input type="text" id="editSubmenuTarget" disabled>
+
+            <div class="action-buttons">
+                <button class="cancel-btn" onclick="closeModal()">Cancel</button>
+                <button class="save-btn" onclick="saveEdit()">Save</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let menuData = {};
+        let menuHistory = [];
+        let currentMenu = 'main';
+        let currentMenuSet = null;
+        let currentEditIndex = null;
+        let accountName = localStorage.getItem('loggedInUser');
+        let selectedMenu = {};
+
+
+        document.addEventListener('DOMContentLoaded', async function() {
+            selectedMenu = getQueryParam('menu');
+            try {
+                const response = await fetch(`/menuData?accountName=${encodeURIComponent(accountName)}`);
+                const userMenus = await response.json();
+                currentMenuSet = userMenus[selectedMenu];
+                renderMenu(currentMenuSet.options[currentMenu]);
+            } catch (error) {
+                console.error('Error fetching or processing newuser.json:', error);
+            }
+
+            document.getElementById('back-button').addEventListener('click', goBack);
+        });
+
+        async function saveMenuData() {
+            try {
+                const payload = {
+                    accountName,        // Include currentUser in the payload
+                    selectedMenu,       // Include selectedMenu in the payload
+                    currentMenuSet      // Include the menuData object in the payload
+                };
+
+                const response = await fetch('/saveMenuData', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(payload),
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to save menu data');
+                }
+
+                console.log('Menu data saved successfully');
+            } catch (error) {
+                console.error('Error saving menu data:', error);
+            }
+        }
+
+        function renderMenu(menu) {
+            const menuContainer = document.getElementById('menu');
+            menuContainer.innerHTML = '';
+
+            menu.options.forEach((option, index) => {
+                const button = document.createElement('button');
+                button.textContent = option.label;
+                button.classList.add('dial-button');
+
+                const removeIcon = document.createElement('img');
+                removeIcon.src = 'https://cdn4.iconfinder.com/data/icons/controls-add-on-flat/48/Contols_-_Add_On-35-512.png';
+                removeIcon.classList.add('remove-icon');
+                removeIcon.addEventListener('click', (event) => {
+                    event.stopPropagation();
+                    removeOption(index);
+                });
+
+                const editIcon = document.createElement('img');
+                editIcon.src = 'https://w7.pngwing.com/pngs/245/890/png-transparent-computer-icons-writing-editing-write-miscellaneous-angle-pencil.png';
+                editIcon.classList.add('edit-icon');
+                editIcon.addEventListener('click', (event) => {
+                    event.stopPropagation();
+                    openModal(index, option);
+                });
+
+                button.appendChild(removeIcon);
+                button.appendChild(editIcon);
+                button.addEventListener('click', () => handleOptionClick(option));
+
+                menuContainer.appendChild(button);
+            });
+
+            document.getElementById('back-button').style.display = menuHistory.length > 0 ? 'block' : 'none';
+        }
+
+        function handleOptionClick(option) {
+            if (option.action === 'submenu') {
+                menuHistory.push(currentMenu);
+                currentMenu = option.target;
+                renderMenu(currentMenuSet.options[option.target]);
+            } else if (option.action === 'dial') {
+                alert(`Dialing ${option.phoneNumber} at extension ${option.extension}`);
+            }
+        }
+
+        function goBack() {
+            if (menuHistory.length > 0) {
+                const previousMenu = menuHistory.pop();
+                currentMenu = previousMenu;
+                renderMenu(currentMenuSet.options[previousMenu]);
+            }
+        }
+
+        function openModal(index, option) {
+            currentEditIndex = index;
+            document.getElementById('editLabel').value = option.label;
+            document.getElementById('editPhoneNumber').value = option.phoneNumber || '';
+            document.getElementById('editExtension').value = option.extension || '';
+            document.getElementById('editSubmenuTarget').value = option.target || '';
+
+            if (option.action === 'dial') {
+                document.getElementById('dialAction').checked = true;
+                document.getElementById('editPhoneNumber').disabled = false;
+                document.getElementById('editExtension').disabled = false;
+                document.getElementById('editSubmenuTarget').disabled = true;
+            } else if (option.action === 'submenu') {
+                document.getElementById('submenuAction').checked = true;
+                document.getElementById('editPhoneNumber').disabled = true;
+                document.getElementById('editExtension').disabled = true;
+                document.getElementById('editSubmenuTarget').disabled = false;
+            }
+
+            document.getElementById('editModal').style.display = 'block';
+        }
+
+        function closeModal() {
+            document.getElementById('editModal').style.display = 'none';
+        }
+
+        // function saveEdit() {
+        //     const label = document.getElementById('editLabel').value;
+        //     const phoneNumber = document.getElementById('editPhoneNumber').value;
+        //     const extension = document.getElementById('editExtension').value;
+        //     const target = document.getElementById('editSubmenuTarget').value;
+
+        //     const actionType = document.querySelector('input[name="actionType"]:checked').value;
+        //     let option = { label: label, action: actionType };
+
+        //     if (actionType === 'dial') {
+        //         option.phoneNumber = phoneNumber;
+        //         option.extension = extension;
+        //     } else if (actionType === 'submenu') {
+        //         option.target = target;
+        //     }
+
+        //     currentMenuSet.options[currentMenu].options[currentEditIndex] = option;
+        //     saveMenuData();
+        //     renderMenu(currentMenuSet.options[currentMenu]);
+        //     closeModal();
+        // }
+
+        function saveEdit() {
+            const label = document.getElementById('editLabel').value;
+            const phoneNumber = document.getElementById('editPhoneNumber').value;
+            const extension = document.getElementById('editExtension').value;
+            const target = document.getElementById('editSubmenuTarget').value;
+
+            const actionType = document.querySelector('input[name="actionType"]:checked').value;
+            let option = { label: label, action: actionType };
+
+            if (actionType === 'dial') {
+                option.phoneNumber = phoneNumber;
+                option.extension = extension;
+            } else if (actionType === 'submenu') {
+                option.target = target;
+            }
+
+            if (currentEditIndex !== null) {
+                // Editing an existing option
+                currentMenuSet.options[currentMenu].options[currentEditIndex] = option;
+            } else {
+                // Adding a new option
+                currentMenuSet.options[currentMenu].options.push(option);
+            }
+
+            saveMenuData();
+            renderMenu(currentMenuSet.options[currentMenu]);
+            closeModal();
+        }
+
+
+        function removeOption(index) {
+            currentMenuSet.options[currentMenu].options.splice(index, 1);
+            saveMenuData();
+            renderMenu(currentMenuSet.options[currentMenu]);
+        }
+
+        function openAddModal() {
+            currentEditIndex = null;
+            document.getElementById('modalTitle').textContent = "Add Option";
+            document.getElementById('editLabel').value = '';
+            document.getElementById('dialAction').checked = false;
+            document.getElementById('submenuAction').checked = false;
+            document.getElementById('editPhoneNumber').value = '';
+            document.getElementById('editExtension').value = '';
+            document.getElementById('editSubmenuTarget').value = '';
+            document.getElementById('editPhoneNumber').disabled = true;
+            document.getElementById('editExtension').disabled = true;
+            document.getElementById('editSubmenuTarget').disabled = true;
+
+            document.getElementById('editModal').style.display = 'flex';
+        }
+
+        function formatPhoneNumber(input) {
+            let value = input.value.replace(/\D/g, '');
+            if (value.length > 3 && value.length <= 6) {
+                value = `(${value.slice(0, 3)}) ${value.slice(3)}`;
+            } else if (value.length > 6) {
+                value = `(${value.slice(0, 3)}) ${value.slice(3, 6)}-${value.slice(6)}`;
+            }
+            input.value = value;
+        }
+
+        document.querySelectorAll('input[name="actionType"]').forEach((radio) => {
+            radio.addEventListener('change', function() {
+                if (this.value === 'dial') {
+                    document.getElementById('editPhoneNumber').disabled = false;
+                    document.getElementById('editExtension').disabled = false;
+                    document.getElementById('editSubmenuTarget').disabled = true;
+                } else if (this.value === 'submenu') {
+                    document.getElementById('editPhoneNumber').disabled = true;
+                    document.getElementById('editExtension').disabled = true;
+                    document.getElementById('editSubmenuTarget').disabled = false;
+                }
+            });
+        });
+
+        // Function to get query parameter from the URL
+        function getQueryParam(param) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(param);
+        }
+    </script>
+</body>
+</html>

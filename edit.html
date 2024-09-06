@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>linkup</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="newpage.css">
+    <style>
+        /* Grid container */
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr); /* Three boxes per row */
+            gap: 20px;
+            margin: 40px;
+            padding-top: 25px;
+        }
+
+        /* Styling for each box */
+        .menu-box {
+            width: 100%;
+            background-color: #ecefff;
+            color: #333;
+            display: flex;
+            align-items: flex-start;
+            justify-content: flex-start;
+            flex-direction: column;
+            font-size: 16px;
+            font-weight: normal;
+            padding: 10px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-decoration: none;
+            color: inherit;
+            position: relative;
+        }
+
+        .edit-button {
+            position: absolute;
+            top: 0;
+            right: 0;
+            transform: translate(15%, -15%); /* Center the button on the top right corner */
+            width: 21px; /* Adjust the size as needed */
+            height: 21px;
+            cursor: pointer;
+        }
+
+        .edit-box {
+            position: absolute;
+            top: 0;
+            right: 0;
+            transform: translate(25%, -25%); /* Center the button on the top right corner */
+            width: 21px; /*Adjust the size as needed  */
+            height: 21px;
+            cursor: pointer;
+        }
+
+        .plus-box { /* Changed/Added */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            font-weight: bold;
+            color: #666;
+            cursor: pointer;
+            background-color: #f9f9f9;
+            border: 2px dashed #ccc;
+            border-radius: 8px;
+        }
+
+        .plus-box:hover { /* Changed/Added */
+            background-color: #ecefff;
+        }
+
+        .plus-box::after { /* Changed/Added */
+            content: "Create new Options Menu";
+            font-size: 14px;
+            color: #333;
+            position: absolute;
+            bottom: -20px;
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .plus-box:hover::after { /* Changed/Added */
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal { /* Changed/Added */
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.4);
+        }
+
+        .modal-content { /* Changed/Added */
+            background-color: #fff;
+            margin: 15% auto;
+            padding: 20px;
+            width: 50%;
+            border-radius: 10px;
+        }
+
+        .modal-close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .modal-close:hover,
+        .modal-close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .modal-form {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .modal-form input {
+            padding: 8px;
+            font-size: 16px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+        }
+
+        .modal-form button {
+            padding: 10px;
+            font-size: 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .save-btn {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        .delete-btn {
+            background-color: #f44336;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <header class="navbar">
+    <div class="container">
+        <div class="navbar-logo">
+            <a href="newpage.html" class="logo">
+                <img src="modified_logo_with_white_background.png" alt="Grammarly Logo">
+            </a>
+            <div><a href="newpage.html" style="text-decoration: none; color: inherit;">dialvelocity</a></div>
+        </div>
+        <nav class="navbar-menu">
+            <ul>
+                <li><a href="#">Create Options Page</a></li>
+                <li><a href="#">Edit Options Page</a></li>
+                <li><a href="#">About</a></li>
+                <li><a href="#">Support</a></li>
+            </ul>
+        </nav>
+        <div class="navbar-cta">
+            <a href="login.html" class="login-btn" id="login-btn" style="display: none;">Log in</a>
+            <a href="signup.html" class="cta-btn" id="signup-btn" style="display: none;">Get linkup (It's Free!)</a>
+            <a href="#" class="cta-btn" id="sign-out-btn">Sign Out</a>
+        </div>
+    </div>
+    </header>
+
+    <main>
+        <div class="grid-container" id="menuGrid"></div>
+    </main>
+
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <span class="modal-close">&times;</span>
+            <form class="modal-form">
+                <label for="name">Name</label>
+                <input type="text" id="modalName" name="name">
+
+                <label for="number">Number</label>
+                <input type="text" id="modalNumber" name="number">
+
+                <button type="button" class="save-btn" id="saveChanges">Save</button>
+                <button type="button" class="delete-btn" id="deleteItem">Delete</button>
+            </form>
+        </div>
+    </div>
+    <!-- <script src="script.js">  
+    </script> -->
+    <script>
+        let userMenus = {};
+
+        document.addEventListener('DOMContentLoaded', async function() {
+            const menuGrid = document.getElementById('menuGrid');
+            // const userAccount = localStorage.getItem('loggedInUser')
+            const createModal = document.getElementById('createModal');
+            const saveMenuButton = document.getElementById('saveMenu');
+            try {
+                // Fetch the user.json data
+                const response = await fetch(`/menuData?accountName=${encodeURIComponent(localStorage.getItem('loggedInUser'))}`); // Adjust the path as necessary
+                userMenus = await response.json();
+
+                // Loop through each menu object in the JSON
+                for (let menuName in userMenus) {
+                    if (userMenus.hasOwnProperty(menuName) && userMenus[menuName].options) {
+                        const menu = userMenus[menuName];
+                
+                        // Create a new box for each menu
+                        const box = document.createElement('a');
+                        box.href = `phoneMenu.html?menu=${encodeURIComponent(menuName)}`; // Add menuName as a query parameter
+                        box.className = 'menu-box';
+
+                        // Populate the box with the menu details
+                        box.innerHTML = `
+                            <div>Name: ${menuName}</div>
+                            <div>Link: ${menu.Link}</div>
+                            <div>Number: ${menu.Number}</divs>
+                            <div class="edit-box" id="penBox" ><img src="https://w7.pngwing.com/pngs/245/890/png-transparent-computer-icons-writing-editing-write-miscellaneous-angle-pencil.png" alt="Edit" class="edit-button" id="pencilEdit"><p></p></div>
+                        `;
+
+                        // Append the box to the grid container
+                        menuGrid.appendChild(box);
+                        box.querySelector('#pencilEdit').addEventListener('click', function(event) {
+                            event.preventDefault(); // Prevent the anchor tag from being triggered
+                            event.stopPropagation(); // Prevent the click from bubbling up to the larger box
+
+                            // Your custom function or action here
+                            openModal(menuName, menu, box);
+                            // You can also call your openModal function here if needed
+                            // openModal(menu);
+                        });
+                    }
+                }
+                
+            } catch (error) {
+                console.error('Error fetching or processing user.json:', error);
+            }
+            // Create the "plus" box
+            const plusBox = document.createElement('div');
+            plusBox.className = 'menu-box plus-box';
+            plusBox.textContent = '+';
+            function generateHexId() {
+                return Math.floor((1 + Math.random()) * 0x100000000000)
+                    .toString(16)
+                    .substring(1);
+            }
+            plusBox.addEventListener('click', async function () {
+                const newHex = generateHexId();
+                userMenus[newHex] = {
+                    "Number": "000-000-0000",
+                    "Link": newHex,
+                    "options": {
+                        "main": {
+                            "menuId": "main",
+                            "options": [
+                                {
+                                    "label": "example option",
+                                    "action": "dial",
+                                    "phoneNumber": "(333) 333-333",
+                                    "extension": "4444"
+                                },
+                                {
+                                    "label": "example option 2",
+                                    "action": "dial",
+                                    "phoneNumber": "(333) 333-333",
+                                    "extension": "4444"
+                                }
+                            ]
+                        }             
+                    }
+                }
+                let accountName = localStorage.getItem('loggedInUser');
+                try {
+                    const response = await fetch(`/updateMenu?username=${encodeURIComponent(accountName)}`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(userMenus)
+                    });
+
+                    if (!response.ok) {
+                        throw new Error('Failed to update menu data on the server.');
+                    }
+
+                    console.log('Menu data successfully updated on the server.');
+                } catch (error) {
+                    console.error('Error updating menu data on the server:', error);
+                }
+                location.reload();
+            });
+            menuGrid.appendChild(plusBox);
+
+            //location.reload();
+        });
+
+
+        // Assuming you have the renderMenu function already
+        function renderMenu(menuData) {
+            const menuGrid = document.getElementById('menuGrid');
+
+            // Clear the grid before rendering new items
+            menuGrid.innerHTML = '';
+
+            // Iterate over the menu items and create the HTML structure
+            for (const menuItem of menuData) {
+                const menuBox = document.createElement('div');
+                menuBox.classList.add('menu-box');
+
+                // Create the content for the menu box
+                const menuContent = document.createElement('p');
+                menuContent.textContent = `${menuItem.name}: ${menuItem.number}`;
+                menuBox.appendChild(menuContent);
+
+                // Create the edit button
+                const editButton = document.createElement('img');
+                editButton.src = 'https://w7.pngwing.com/pngs/245/890/png-transparent-computer-icons-writing-editing-write-miscellaneous-angle-pencil.png';
+                editButton.alt = 'Edit';
+                editButton.classList.add('edit-button');
+
+                editButton.addEventListener('click', function () {
+                    openModal(menuItem, menuBox);
+                });
+
+                // Append the edit button to the menu box
+                menuBox.appendChild(editButton);
+
+                // Append the menu box to the grid container
+                menuGrid.appendChild(menuBox);
+            }
+        }
+
+        function openModal(menuName, menu, box) { // Line 94
+            const modal = document.getElementById('editModal'); // Line 95
+            const modalName = document.getElementById('modalName'); // Line 96
+            const modalNumber = document.getElementById('modalNumber'); // Line 97
+
+            // Prefill the modal with current data // Line 99
+            modalName.value = menuName; // Line 100
+            modalNumber.value = menu.Number; // Line 101
+
+            // Show the modal // Line 103
+            modal.style.display = "block"; // Line 104
+
+            document.getElementById('saveChanges').onclick = async function () {
+                const newName = modalName.value;
+                const newNumber = modalNumber.value;
+                let accountName = localStorage.getItem('loggedInUser');
+
+                userMenus[newName] = { ...userMenus[menuName] }; 
+                delete userMenus[menuName];
+
+                userMenus[newName].Number = newNumber;
+
+                console.log(userMenus);
+
+                box.querySelector('div:nth-child(1)').textContent = `Name: ${newName}`;
+                box.querySelector('div:nth-child(3)').textContent = `Number: ${newNumber}`;
+
+                // Send the updated menu data to the server
+                try {
+                    const response = await fetch(`/updateMenu?username=${encodeURIComponent(accountName)}`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(userMenus)
+                    });
+
+                    if (!response.ok) {
+                        throw new Error('Failed to update menu data on the server.');
+                    }
+
+                    console.log('Menu data successfully updated on the server.');
+                } catch (error) {
+                    console.error('Error updating menu data on the server:', error);
+                }
+
+                closeModal();
+            };
+
+            // Handle delete button click // Line 121
+            document.getElementById('deleteItem').onclick = function () { // Line 122
+                box.remove(); // Line 123
+                delete userMenus[menuName]; // Line 124
+                closeModal(); // Line 125
+            };
+        }
+
+
+        // Function to close the modal
+        function closeModal() {
+            const modal = document.getElementById('editModal');
+            modal.style.display = "none";
+        }
+
+        document.querySelector('.modal-close').onclick = function () {
+            closeModal();
+        }
+
+    </script>
+</body>
+</html>
